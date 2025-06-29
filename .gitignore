@@ -1,13 +1,10 @@
 ###> PhpStorm ###
 /.idea
+###< PhpStorm ###
 ###> symfony/framework-bundle ###
 /.env
 /.env.dev
 /.env.test
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
 /vendor/
@@ -22,3 +19,5 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+/templates/partials/header-final.html.twig

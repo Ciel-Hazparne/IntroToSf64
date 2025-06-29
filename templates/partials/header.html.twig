@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
+    <div class="container-fluid">
+        <a href="/" class="navbar-brand">CIEL IR notre 1er projet Symfony</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a href="{{ path('home') }}" class="nav-link"><i class="bi bi-house"></i> Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="bi bi-files"></i> Articles</a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a href="#" class="dropdown-item"><i class="bi bi-list-ul"></i> Liste des articles</a></li>
+                        {% if app.user %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="#" class="dropdown-item"><i class="bi bi-card-list"></i> Ma liste</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="#" class="dropdown-item"><i class="bi bi-file-plus"></i> Ajouter un article</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a href="#" class="dropdown-item"><i class="bi bi-search"></i> Recherche article par prix</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="bi bi-inbox"></i> Catégories</a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a href="#" class="dropdown-item"><i class="bi bi-list-ul"></i> Liste des catégories</a></li>
+                        {% if app.user %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="#" class="dropdown-item"><i class="bi bi-plus-square"></i> Ajouter une catégorie</a></li>
+                        {% endif %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a href="#" class="dropdown-item"><i class="bi bi-search"></i> Recherche article par catégorie</a></li>
+                    </ul>
+                </li>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="bi bi-pencil-square"></i> Administration</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <!-- Recherche et menu utilisateur, décalé à droite -->
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <!-- Formulaire recherche en d-flex pour ligne -->
+                <form class="d-flex me-3" method="get" action="#">
+                    <input name="mot_cle" class="form-control form-control-sm me-2" type="search" placeholder="Recherche par nom article" aria-label="Search">
+                    <button class="btn btn-outline-dark btn-sm" type="submit">Rechercher</button>
+                </form>
+                {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person"></i> {{ app.user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Modifier mon profil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-left"></i> Déconnexion</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="bi bi-box-arrow-right"></i> Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="bi bi-pencil-square"></i> Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
