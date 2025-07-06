@@ -10,7 +10,7 @@
         <link rel="shortcut icon" href="images/logostjo.png">
     {% endblock %}
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <header data-bs-theme="auto">
     {% include 'partials/header.html.twig'%}
 </header>
@@ -26,12 +26,11 @@
 {% endfor %}
 <main data-bs-theme="auto">
     <div class="container mt-3">
-        {% block body %}
-        {% endblock %}
+        {% block body %}{% endblock %}
     </div>
 </main>
 <div class="filler"></div>
-<footer class="container" data-bs-theme="auto">
+<footer class="container mt-auto" data-bs-theme="auto">
     {{ include('partials/footer.html.twig') }}
 </footer>
 {% block javascripts %}
