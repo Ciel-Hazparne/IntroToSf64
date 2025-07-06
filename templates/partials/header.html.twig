@@ -38,15 +38,15 @@
 
                 <!-- Dropdown Catégories -->
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle"
+                    <a href="#" class="nav-link dropdown-toggle{% if current_menu is defined and current_menu == 'categories' %}active{% endif %}"
                        data-bs-toggle="dropdown" role="button" aria-expanded="false">
                         <i class="fa fa-inbox"></i> Catégories
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a href="#" class="dropdown-item"><i class="fa fa-th-large"></i> Liste des catégories</a></li>
+                        <li><a href="{{ path('category_index') }}" class="dropdown-item"><i class="fa fa-th-large"></i> Liste des catégories</a></li>
                         {% if app.user %}
                             <li><hr class="dropdown-divider"></li>
-                            <li><a href="#" class="dropdown-item"><i class="fa fa-plus-square"></i> Ajouter une catégorie</a></li>
+                            <li><a href="{{ path('category_new') }}" class="dropdown-item"><i class="fa fa-plus-square"></i> Ajouter une catégorie</a></li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li><a href="#" class="dropdown-item"><i class="fa fa-search"></i> Recherche article par catégorie</a></li>

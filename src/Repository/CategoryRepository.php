@@ -2,26 +2,24 @@
 
 namespace App\Repository;
 
-use App\Entity\Article;
+use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Article>
+ * @extends ServiceEntityRepository<Category>
  */
-class ArticleRepository extends ServiceEntityRepository
+class CategoryRepository extends ServiceEntityRepository
 {
-
-
     private EntityManagerInterface $em;
     public function __construct(ManagerRegistry $registry, EntityManagerInterface $em)
     {
-        parent::__construct($registry, Article::class);
+        parent::__construct($registry, Category::class);
         $this->em = $em;
     }
 
-    public function save(Article $entity, bool $flush = false): void
+    public function save(Category $entity, bool $flush = false): void
     {
         $this->em->persist($entity);
 
@@ -30,7 +28,7 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Article $entity, bool $flush = false): void
+    public function remove(Category $entity, bool $flush = false): void
     {
         $this->em->remove($entity);
 

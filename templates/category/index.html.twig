@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h1>Liste des catégories</h1>
+
+    <table class="table table-fixed">
+        <thead>
+        <tr>
+            <th class="name-cell">Nom</th>
+            <th>Description</th>
+            <th class="action-cell">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for category in categories %}
+            <tr>
+                <td class="name-cell">{{ category.title }}</td>
+                <td class="description-cell">{{ category.description }}</td>
+                <td class="action-cell">
+                    <a href="{{ path('category_show', {'id': category.id}) }}" class="btn btn-info">Détails</a>
+                    <a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-warning">Modifier</a>
+                    {{ include('category/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucune catégorie n'a été trouvée</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('category_new') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter une catégorie</a>
+{% endblock %}

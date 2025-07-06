@@ -3,9 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Form\ArticleForm;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +27,7 @@ final class ArticleController extends AbstractController
     public function new(Request $request, ArticleRepository $articleRepository): Response
     {
         $article = new Article();
-        $form = $this->createForm(ArticleForm::class, $article);
+        $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -39,11 +38,9 @@ final class ArticleController extends AbstractController
 
         return $this->render('article/new.html.twig', [
             'current_menu' => 'articles',
-            'article' => $article,
             'form' => $form,
         ]);
     }
-
 
     #[Route('/{id}', name: 'article_show', methods: ['GET'])]
     public function show(Article $article): Response
@@ -57,7 +54,7 @@ final class ArticleController extends AbstractController
     #[Route('/{id}/edit', name: 'article_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
-        $form = $this->createForm(ArticleForm::class, $article);
+        $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

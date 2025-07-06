@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégorie {{ category.title }}{% endblock %}
+
+{% block body %}
+    <h1>Catégorie {{ category.title }}</h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Nom de la catégorie</th>
+            <td>{{ category.title }}}</td>
+        </tr>
+        <tr>
+            <th>Description de la catégorie</th>
+            <td>{{ category.description }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-start mt-3">
+        <a href="{{ path('category_index') }}"><button type="button" class="btn btn-secondary me-md-2"><i class="fa fa-reply"></i> Retour</button></a>
+        {#        Optionnel : boutons Modifier et Supprimer#}
+        <a href="{{ path('category_edit', {'id': category.id}) }}"><button type="button" class="btn btn-warning me-md-2"><i class="fa fa-reply"></i> Modifier</button></a>
+        {{ include('category/_delete_form.html.twig') }}
+    </div>
+
+{% endblock %}
