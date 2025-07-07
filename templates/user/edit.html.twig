@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MAJ {{ user.firstname }} {{ user.lastname }}{% endblock %}
+
+{% block body %}
+    <h1>Mettre à jour les informations de {{ user.firstname }} {{ user.lastname }}</h1>
+
+    {{ include('user/_form.html.twig', {'button_label': 'Mise à jour'}) }}
+
+{% endblock %}

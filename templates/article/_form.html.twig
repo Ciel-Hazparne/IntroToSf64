@@ -1,6 +1,6 @@
 {{ form_start(form) }}
 <div class="row">
-    <div class="col-md-10">{{ form_row(form.name) }}</div>
+    <div class="col-md-10 mt-5">{{ form_row(form.name) }}</div>
 </div>
 <div class="row">
     <div class="col-md-10">{{ form_row(form.price) }}</div>
@@ -9,7 +9,7 @@
     <div class="col-md-10">{{ form_row(form.category) }}</div>
 </div>
 <div class="d-flex justify-content-start mt-3">
-    <button class="btn btn-success me-md-2"><i class="fa fa-check"></i> {{ button_label|default('Sauvegarder') }}</button>
     <a href="{{ path('article_index') }}"><button type="button" class="btn btn-secondary me-md-2"><i class="fa fa-reply"></i> Retour</button></a>
+    <button class="btn btn-success me-md-2"><i class="fa fa-check"></i> {{ button_label|default('Sauvegarder') }}</button>
 </div>
 {{ form_end(form) }}
