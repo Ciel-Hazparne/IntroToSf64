@@ -4,24 +4,7 @@
 
 {% block body %}
     <h1>Inscription</h1>
-    <div class="row">
-        {{ form_start(form) }}
-        <div class="row mt-5">
-            <div class="col">{{ form_row(form.firstname) }}</div>
-            <div class="col">{{ form_row(form.lastname) }}</div>
-            <div class="col">{{ form_row(form.email) }}</div>
-        </div>
-        <div class="col-md-8">
-            <div class="row mb-3 mt-5">
-                <div class="col">{{ form_row(form.password) }}</div>
-                <div class="col">{{ form_row(form.confirm_password) }}</div>
-            </div>
-        </div>
 
-        <a href="{{ path('home') }}">
-            <button type="button" class="btn btn-secondary me-md-2"><i class="fa fa-reply"></i> Retour</button>
-        </a>
-        <button type="submit" class="btn btn-success"><i class="fa fa-user-plus"></i> Inscription</button>
-        {{ form_end(form) }}
-    </div>
+    {{ include('user/_form.html.twig') }}
+
 {% endblock %}

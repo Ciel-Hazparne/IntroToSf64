@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationType;
+use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -30,18 +31,36 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/registration', name: 'registration')]
-    public function registration(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    public function registration(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationType::class, $user);
+        $form = $this->createForm(UserType::class, $user, [
+            'is_admin' => false,  // inutile pour l'inscription mais pour rappel des conditions du formulaire
+            'is_edit' => false,  // inutile pour l'inscription mais pour rappel des conditions du formulaire
+        ]);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($hashedPassword);
-            $em->persist($user);
-            $em->flush();
 
-            return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // récupère les 2 mots de passe
+            $plainPassword = $form->get('password')->getData();
+            $confirmPassword = $form->get('confirm_password')->getData();
+
+            // vérifie qu'ils sont identiques si oui on les hash et sinon on renvoie un message d'érreur
+            if ($plainPassword !== $confirmPassword) {
+                $form->get('confirm_password')->addError(new FormError('Les mots de passe ne correspondent pas.'));
+            } else {
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+
+                // prépare puis insère en BDD avec le ROLE_USER
+                $user->setRoles(['ROLE_USER']);
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                // renvoie vers artciles plutôt que user car la liste doit rester confidentielle
+                return $this->redirectToRoute('login', [], Response::HTTP_SEE_OTHER);
+            }
         }
         return $this->render('security/registration.html.twig',
             ['form' => $form->createView()]);

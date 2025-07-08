@@ -36,22 +36,29 @@ class UserType extends AbstractType
                     'placeholder' => 'Entrez votre nom',
                 ],
             ])
-            ->add('password',PasswordType::class, [
-                'required' => true,
+//            Lors de la modification de son profil on ne veut pas être obligé d'entrer les 2 mots de passe si on ne les modifie pas
+            ->add('password', PasswordType::class, [
+                'required' => !$options['is_edit'],
+                'mapped' => false,
                 'label' => 'Mot de passe',
                 'attr' => [
                     'placeholder' => 'Entrez votre mot de passe',
+                    'autocomplete' => 'new-password',
                 ],
+                'empty_data' => '',
             ])
-            ->add('confirm_password',PasswordType::class, [
-                'required' => true,
-
+            // même logique pour ne pas avoir à taper le mot de passe s'il n'y a pas de modification à faire
+            ->add('confirm_password', PasswordType::class, [
+                'required' => !$options['is_edit'],
                 'label' => 'Confirmation du mot de passe',
+                'mapped' => false,
                 'attr' => [
                     'placeholder' => 'Entrez à nouveau votre mot de passe',
                 ],
-            ])
-            ->add('roles',ChoiceType::class,[
+            ]);
+        // Ajout conditionnel du champ "roles" réservé à ADMIN. On ne veut pas qu'ils apparaissent dans le formulaire d'inscription
+        if ($options['is_admin']) {
+            $builder->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Editeur' => 'ROLE_EDITOR',
@@ -60,14 +67,15 @@ class UserType extends AbstractType
                 'expanded' => true,
                 'multiple' => true,
                 'label' => 'Rôles'
-            ])
-        ;
+            ]);
+        }
     }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_admin' => false, // par défaut on n'est pas en mode admin
+            'is_edit' => false,  // par défaut on n'est pas en mode modification
         ]);
     }
 }

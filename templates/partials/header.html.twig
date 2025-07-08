@@ -19,19 +19,22 @@
 
                 <!-- Dropdown Articles -->
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle {% if current_menu is defined and current_menu == 'articles' %}active{% endif %}"
+                    <a href="#" class="nav-link dropdown-toggle
+                    {% if current_menu is defined and current_menu == 'articles' %}active{% endif %}"
                        data-bs-toggle="dropdown" role="button" aria-expanded="false">
                         <i class="fa fa-desktop"></i> Articles
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a href="{{ path('article_index') }}" class="dropdown-item "><i class="fa fa-th-list"></i> Liste des articles</a></li>
+                        <li><a href="{{ path('article_index') }}"
+                               class="dropdown-item "><i class="fa fa-th-list"></i> Liste des articles</a></li>
                         {% if app.user %}
                             <li><hr class="dropdown-divider"></li>
                             <li><a href="#" class="dropdown-item"><i class="fa fa-shopping-cart"></i> Ma liste</a></li>
                         {% endif %}
                         {% if is_granted('ROLE_EDITOR') %}
                             <li><hr class="dropdown-divider"></li>
-                            <li><a href="{{ path('article_new') }}" class="dropdown-item"><i class="fa fa-plus"></i> Ajouter un article</a></li>
+                            <li><a href="{{ path('article_new') }}"
+                                   class="dropdown-item"><i class="fa fa-plus"></i> Ajouter un article</a></li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li><a href="#" class="dropdown-item"><i class="fa fa-search"></i> Recherche article par prix</a></li>
@@ -40,15 +43,18 @@
 
                 <!-- Dropdown Catégories -->
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle{% if current_menu is defined and current_menu == 'categories' %}active{% endif %}"
+                    <a href="#" class="nav-link dropdown-toggle
+                    {% if current_menu is defined and current_menu == 'categories' %}active{% endif %}"
                        data-bs-toggle="dropdown" role="button" aria-expanded="false">
                         <i class="fa fa-inbox"></i> Catégories
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a href="{{ path('category_index') }}" class="dropdown-item"><i class="fa fa-th-large"></i> Liste des catégories</a></li>
+                        <li><a href="{{ path('category_index') }}"
+                               class="dropdown-item"><i class="fa fa-th-large"></i> Liste des catégories</a></li>
                         {% if is_granted('ROLE_EDITOR') %}
                             <li><hr class="dropdown-divider"></li>
-                            <li><a href="{{ path('category_new') }}" class="dropdown-item"><i class="fa fa-plus-square"></i> Ajouter une catégorie</a></li>
+                            <li><a href="{{ path('category_new') }}"
+                                   class="dropdown-item"><i class="fa fa-plus-square"></i> Ajouter une catégorie</a></li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li><a href="#" class="dropdown-item"><i class="fa fa-search"></i> Recherche article par catégorie</a></li>
@@ -57,7 +63,9 @@
 
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <a href="{{ path('user_index') }}" class="nav-link"><i class="fa fa-cog"></i> Administration</a>
+                        <a href="{{ path('user_index') }}"
+                           class="nav-link{% if current_menu is defined and current_menu == 'articles' %}active{% endif %}">
+                        <i class="fa fa-cog"></i> Administration</a>
                     </li>
                 {% endif %}
             </ul>
@@ -80,8 +88,10 @@
                             <i class="fa fa-user"></i> {{ app.user.lastname }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-{#                            <li><a class="dropdown-item" href="{{ path('user_edit') }}"><i class="fa fa-pencil-square-o"></i> Modifier mon profil</a></li>#}
-                            <li><a class="dropdown-item" href="{{ path('logout') }}"><i class="fa fa-sign-out"></i> Déconnexion</a></li>
+                            <li><a class="dropdown-item" href="{{ path('user_edit', {id: app.user.id}) }}">
+                                    <i class="fa fa-pencil-square-o"></i> Modifier mon profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('logout') }}">
+                                    <i class="fa fa-sign-out"></i> Déconnexion</a></li>
                         </ul>
                     </li>
                 {% else %}
@@ -89,7 +99,8 @@
                         <a href="{{ path('login') }}" class="nav-link"><i class="fa fa-sign-in"></i> Connexion</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ path('registration') }}" class="nav-link"><i class="fa fa-hand-o-right"></i> Inscription</a>
+                        <a href="{{ path('registration') }}" class="nav-link">
+                            <i class="fa fa-hand-o-right"></i> Inscription</a>
                     </li>
                 {% endif %}
             </ul>
