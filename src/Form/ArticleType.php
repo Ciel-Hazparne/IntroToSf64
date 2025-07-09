@@ -19,14 +19,14 @@ class ArticleType extends AbstractType
                 'attr' => [
                 'required' => true,
                 'label' => 'Nom de l\'article',
-                'placeholder' => 'Entrez le nom de l\'article',
+                'placeholder' => 'Entez le nom de l\'article : entre 5 et 50 caractères',
                 ],
             ])
             ->add('price', TextType::class, [
                 'attr' => [
                 'required' => true,
                 'label' => 'Prix de l\'article',
-                'placeholder' => 'Entrez le prix de l\'article',
+                'placeholder' => 'Entrez le prix de l\'article : il doit être supérieur à 0€',
                 ],
             ])
             ->add('category',EntityType::class,[

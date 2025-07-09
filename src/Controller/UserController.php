@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Validator\PasswordValidator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -30,7 +31,8 @@ final class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,
+                        PasswordValidator $passwordValidator): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user, [
@@ -46,16 +48,22 @@ final class UserController extends AbstractController
             if ($plainPassword !== $confirmPassword) {
                 $form->get('confirm_password')->addError(new FormError('Les mots de passe ne correspondent pas.'));
             } else {
-                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-                $user->setPassword($hashedPassword);
+                $violations = $passwordValidator->validate($plainPassword);
+                if (count($violations) > 0) {
+                    foreach ($violations as $violation) {
+                        $form->get('password')->addError(new FormError($violation->getMessage()));
+                    }
+                } else {
+                    $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                    $user->setPassword($hashedPassword);
 
-                $entityManager->persist($user);
-                $entityManager->flush();
+                    $entityManager->persist($user);
+                    $entityManager->flush();
 
-                return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+                    return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
+                }
             }
         }
-
         return $this->render('user/new.html.twig', [
             'current_menu' => 'users',
             'user' => $user,
@@ -75,11 +83,11 @@ final class UserController extends AbstractController
 
     #[Route('/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserInterface $loggedInUser,
-                         AuthorizationCheckerInterface $authChecker, UserPasswordHasherInterface $passwordHasher): Response
+                         AuthorizationCheckerInterface $authChecker, UserPasswordHasherInterface $passwordHasher,
+                         PasswordValidator $passwordValidator): Response
     {
         $isAdmin = $authChecker->isGranted('ROLE_ADMIN');
 
-        // Si l'utilisateur connecté n'est pas admin, il ne peut modifier que son propre profil
         if (!$isAdmin && $user !== $loggedInUser) {
             throw $this->createAccessDeniedException('Vous ne pouvez modifier que votre propre profil.');
         }
@@ -88,7 +96,7 @@ final class UserController extends AbstractController
 
         $form = $this->createForm(UserType::class, $user, [
             'is_admin' => $isAdmin,
-            'is_edit' => true, // ou false si c’est l’inscription
+            'is_edit' => true,
         ]);
         $form->handleRequest($request);
 
@@ -96,23 +104,32 @@ final class UserController extends AbstractController
             $plainPassword = $form->get('password')->getData();
             $confirmPassword = $form->get('confirm_password')->getData();
 
-            // Vérifie que les deux mots de passe correspondent (si l’un est saisi)
-            if (!empty($plainPassword) && $plainPassword !== $confirmPassword) {
-                $form->get('confirm_password')->addError(new FormError('Les mots de passe ne correspondent pas.'));
-            } else {
-                if (!empty($plainPassword)) {
-                    $user->setPassword(
-                        $passwordHasher->hashPassword($user, $plainPassword)
-                    );
+            if (!empty($plainPassword)) {
+                if ($plainPassword !== $confirmPassword) {
+                    $form->get('confirm_password')->addError(new FormError('Les mots de passe ne correspondent pas.'));
+                } else {
+                    $violations = $passwordValidator->validate($plainPassword);
+                    if (count($violations) > 0) {
+                        foreach ($violations as $violation) {
+                            $form->get('password')->addError(new FormError($violation->getMessage()));
+                        }
+                    } else {
+                        $user->setPassword(
+                            $passwordHasher->hashPassword($user, $plainPassword)
+                        );
+                    }
                 }
+            }
 
+            // Si le formulaire est toujours valide après les éventuelles erreurs ajoutées
+            if ($form->isValid()) {
                 if (!$isAdmin) {
-                    $user->setRoles($originalRoles); // préservation des rôles
+                    $user->setRoles($originalRoles);
                 }
 
                 $entityManager->flush();
 
-                return $this->redirectToRoute($isAdmin ? 'user_index' : 'article_index',[],Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute($isAdmin ? 'user_index' : 'article_index', [], Response::HTTP_SEE_OTHER);
             }
         }
 
@@ -123,10 +140,11 @@ final class UserController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }

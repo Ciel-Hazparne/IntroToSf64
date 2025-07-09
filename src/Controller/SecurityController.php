@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use App\Validator\PasswordValidator;
 
 class SecurityController extends AbstractController
 {
@@ -31,7 +32,8 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/registration', name: 'registration')]
-    public function registration(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function registration(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,
+                                 PasswordValidator $passwordValidator): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user, [
@@ -40,7 +42,7 @@ class SecurityController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
 
             // récupère les 2 mots de passe
             $plainPassword = $form->get('password')->getData();
@@ -49,7 +51,15 @@ class SecurityController extends AbstractController
             // vérifie qu'ils sont identiques si oui on les hash et sinon on renvoie un message d'érreur
             if ($plainPassword !== $confirmPassword) {
                 $form->get('confirm_password')->addError(new FormError('Les mots de passe ne correspondent pas.'));
-            } else {
+            }
+
+            // Appel de la validation via le service
+            $violations = $passwordValidator->validate($plainPassword);
+            foreach ($violations as $violation) {
+                $form->get('password')->addError(new FormError($violation->getMessage()));
+            }
+
+                if ($form->isValid()) {
                 $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
                 $user->setPassword($hashedPassword);
 
@@ -58,7 +68,7 @@ class SecurityController extends AbstractController
                 $entityManager->persist($user);
                 $entityManager->flush();
 
-                // renvoie vers artciles plutôt que user car la liste doit rester confidentielle
+                // renvoie vers le formulaire de connexion pour authentification
                 return $this->redirectToRoute('login', [], Response::HTTP_SEE_OTHER);
             }
         }
