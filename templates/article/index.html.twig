@@ -38,4 +38,8 @@
     {% if is_granted('ROLE_EDITOR') %}
     <a href="{{ path('article_new') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un article</a>
     {% endif %}
+    {# Liens de pagination #}
+    <div class="pagination">
+        {{ knp_pagination_render(articles) }}
+    </div>
 {% endblock %}

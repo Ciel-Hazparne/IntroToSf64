@@ -10,14 +10,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/article')]
 final class ArticleController extends AbstractController
 {
     #[Route(name: 'article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
+    public function index(ArticleRepository $articleRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $articles = $articleRepository->findAll();
+        $articles = $paginator->paginate($articleRepository->findAll(),
+            $request->query->getInt('page', 1), // on démarre à la page 1
+            3 // on ne veut afficher que 3 articles/page
+        );
         return $this->render('article/index.html.twig', [
             'current_menu' => 'articles',
             'articles' => $articles,
