@@ -67,6 +67,9 @@ class SecurityController extends AbstractController
                 $user->setRoles(['ROLE_USER']);
                 $entityManager->persist($user);
                 $entityManager->flush();
+                    $this->addFlash('success', "Bonjour <strong>{$user->getFirstname()}
+                    {$user->getLastname()}</strong> vous êtes inscrit à notre site, veuillez vous identifier pour accéder à votre compte.");
+
 
                 // renvoie vers le formulaire de connexion pour authentification
                 return $this->redirectToRoute('login', [], Response::HTTP_SEE_OTHER);

@@ -33,7 +33,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,
+    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher,
                         PasswordValidator $passwordValidator): Response
     {
         $user = new User();
@@ -59,8 +59,8 @@ final class UserController extends AbstractController
                     $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
                     $user->setPassword($hashedPassword);
 
-                    $entityManager->persist($user);
-                    $entityManager->flush();
+                    $userRepository->save($user, true);
+                    $this->addFlash('success', "L'utilisateur <strong>{$user->getFirstname()} {$user->getLastname()}</strong> a bien été enregistré");
 
                     return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
                 }
@@ -83,7 +83,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserInterface $loggedInUser,
+    public function edit(Request $request, User $user, UserRepository $userRepository, UserInterface $loggedInUser,
                          AuthorizationCheckerInterface $authChecker, UserPasswordHasherInterface $passwordHasher,
                          PasswordValidator $passwordValidator): Response
     {
@@ -128,7 +128,8 @@ final class UserController extends AbstractController
                     $user->setRoles($originalRoles);
                 }
 
-                $entityManager->flush();
+                $userRepository->save($user, true);
+                $this->addFlash('success', "L'utilisateur <strong>{$user->getFirstname()} {$user->getLastname()}</strong> a bien été modifié");
 
                 return $this->redirectToRoute($isAdmin ? 'user_index' : 'article_index', [], Response::HTTP_SEE_OTHER);
             }
@@ -144,11 +145,11 @@ final class UserController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
+            $userRepository->remove($user, true);
+            $this->addFlash('success', "L'utilisateur <strong>{$user->getFirstname()} {$user->getLastname()}</strong> a bien été supprimé");
         }
 
         return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);

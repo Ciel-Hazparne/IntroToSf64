@@ -35,6 +35,7 @@ final class CategoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->save($category, true);
+            $this->addFlash('success', "La catégorie <strong>{$category->getTitle()}</strong> a bien été enregistrée");
 
             return $this->redirectToRoute('category_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -64,6 +65,7 @@ final class CategoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->save($category, true);
+            $this->addFlash('success', "La catégorie <strong>{$category->getTitle()}</strong> a bien été modifiée");
 
             return $this->redirectToRoute('category_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -81,6 +83,7 @@ final class CategoryController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->getPayload()->getString('_token'))) {
             $categoryRepository->remove($category, true);
+            $this->addFlash('success', "La catégorie <strong>{$category->getTitle()}</strong> a bien été supprimée");
         }
 
         return $this->redirectToRoute('category_index', [], Response::HTTP_SEE_OTHER);

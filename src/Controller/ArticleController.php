@@ -34,6 +34,7 @@ final class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $articleRepository->save($article, true);
+            $this->addFlash('success', "L'article <strong>{$article->getName()}</strong> a bien été enregistré");
 
             return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -62,6 +63,7 @@ final class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $articleRepository->save($article, true);
+            $this->addFlash('success', "L'article <strong>{$article->getName()}</strong> a bien été modifié");
 
             return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -80,6 +82,7 @@ final class ArticleController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->getPayload()->getString('_token'))) {
             $articleRepository->remove($article, true);
+            $this->addFlash('success', "L'article <strong>{$article->getName()}</strong> a bien été supprimé");
         }
 
         return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
