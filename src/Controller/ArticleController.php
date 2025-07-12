@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Form\ArticleType;
+use App\Form\CategoryPriceSearchType;
 use App\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Model\CategoryPriceSearch;
 
 #[Route('/article')]
 final class ArticleController extends AbstractController
@@ -18,13 +20,30 @@ final class ArticleController extends AbstractController
     #[Route(name: 'article_index', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $articles = $paginator->paginate($articleRepository->findBy([], ['name' => 'ASC']),
-            $request->query->getInt('page', 1), // on démarre à la page 1
-            3 // on ne veut afficher que 3 articles/page
+        $searchData = new CategoryPriceSearch();
+        $form = $this->createForm(CategoryPriceSearchType::class, $searchData);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $articles = $articleRepository->searchArticle(
+                $searchData->getMinPrice(),
+                $searchData->getMaxPrice(),
+                $searchData->getCategory(),
+            );
+        } else {
+            $articles = $articleRepository->findBy([], ['name' => 'ASC']);
+        }
+
+        $articles = $paginator->paginate($articles,
+            $request->query->getInt('page', 1),
+            5
         );
+
         return $this->render('article/index.html.twig', [
             'current_menu' => 'articles',
             'articles' => $articles,
+            'form' => $form->createView(),
+            'show_form' => true,
         ]);
     }
 

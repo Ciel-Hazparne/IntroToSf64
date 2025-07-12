@@ -43,8 +43,6 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a href="#" class="dropdown-item"><i class="fa fa-search"></i> Recherche article par
-                                prix</a></li>
                     </ul>
                 </li>
 
@@ -69,54 +67,52 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a href="#" class="dropdown-item"><i class="fa fa-search"></i> Recherche article par
-                                catégorie</a></li>
                     </ul>
                 </li>
 
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li class="nav-item">
-                            <a href="{{ path('user_index') }}"
-                               class="nav-link {% if current_menu is defined and current_menu == 'users' %}active{% endif %}">
-                                <i class="fa fa-cog"></i> Administration</a>
-                        </li>
-                    {% endif %}
-                </ul>
-
-                <!-- Recherche + menu utilisateur -->
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <!-- Formulaire recherche -->
+                {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <form class="d-flex me-3" method="get" action="#">
-                            <input name="mot_cle" class="form-control form-control-sm me-2" type="search"
-                                   placeholder="Recherche par nom article" aria-label="Search">
-                            <button class="btn btn-outline-dark btn-sm" type="submit">Rechercher</button>
-                        </form>
+                        <a href="{{ path('user_index') }}"
+                           class="nav-link {% if current_menu is defined and current_menu == 'users' %}active{% endif %}">
+                            <i class="fa fa-cog"></i> Administration</a>
                     </li>
+                {% endif %}
+            </ul>
 
-                    {% if app.user %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-user"></i> {{ app.user.lastname }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="{{ path('user_edit', {id: app.user.id}) }}">
-                                        <i class="fa fa-pencil-square-o"></i> Modifier mon profil</a></li>
-                                <li><a class="dropdown-item" href="{{ path('logout') }}">
-                                        <i class="fa fa-sign-out"></i> Déconnexion</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a href="{{ path('login') }}" class="nav-link"><i class="fa fa-sign-in"></i> Connexion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ path('registration') }}" class="nav-link">
-                                <i class="fa fa-hand-o-right"></i> Inscription</a>
-                        </li>
-                    {% endif %}
-                </ul>
+            <!-- Recherche + menu utilisateur -->
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <!-- Formulaire recherche -->
+                <li class="nav-item">
+                    <form class="d-flex me-3" method="get" action="{{ path('search_article') }}">
+                        <input name="keyword" class="form-control form-control-sm me-2" type="search"
+                               placeholder="Recherche par mot clé article" aria-label="Search">
+                        <button class="btn btn-outline-dark btn-sm" type="submit">Rechercher</button>
+                    </form>
+                </li>
+
+                {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user"></i> {{ app.user.lastname }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{{ path('user_edit', {id: app.user.id}) }}">
+                                    <i class="fa fa-pencil-square-o"></i> Modifier mon profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('logout') }}">
+                                    <i class="fa fa-sign-out"></i> Déconnexion</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{{ path('login') }}" class="nav-link"><i class="fa fa-sign-in"></i> Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('registration') }}" class="nav-link">
+                            <i class="fa fa-hand-o-right"></i> Inscription</a>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>

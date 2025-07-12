@@ -4,6 +4,13 @@
 
 {% block body %}
     <h1>Liste des articles</h1>
+        <div>
+            {% if show_form %}
+                <div class="alert alert-dismissible alert-secondary">
+                    {% include 'article/_search_form.html.twig' with { 'form': form } %}
+                </div>
+            {% endif %}
+        </div>
 
     <table class="table">
         <thead>

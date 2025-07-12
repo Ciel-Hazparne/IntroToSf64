@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des articles{% endblock %}
+
+{% block body %}
+    <h1>Liste des articles contenant le mot clé "{{ searchName }}"</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Catégorie</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in articles %}
+            <tr>
+                <td>{{ article.name }}</td>
+                <td>{{ article.price }}</td>
+                <td>{{ article.category.title }}</td>
+                <td>
+                    <a href="{{ path('article_show', {'id': article.id}) }}" class="btn btn-info">Détails</a>
+                    {% if is_granted('ROLE_EDITOR') %}
+                    <a href="{{ path('article_edit', {'id': article.id}) }}" class="btn btn-warning">Modifier</a>
+                    {{ include('article/_delete_form.html.twig') }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucun article n'a été trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<div class="d-flex justify-content-start mt-3">
+    <a href="{{ path('article_index') }}"><button type="button" class="btn btn-secondary me-md-2"><i class="fa fa-reply"></i> Retour</button></a>
+    {% if is_granted('ROLE_EDITOR') %}
+        <a href="{{ path('article_new') }}" class="btn btn-success"><i class="fa fa-plus"></i> Ajouter un article</a>
+    {% endif %}
+</div>
+{% endblock %}
