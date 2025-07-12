@@ -18,7 +18,7 @@ final class ArticleController extends AbstractController
     #[Route(name: 'article_index', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository, PaginatorInterface $paginator, Request $request): Response
     {
-        $articles = $paginator->paginate($articleRepository->findAll(),
+        $articles = $paginator->paginate($articleRepository->findBy([], ['name' => 'ASC']),
             $request->query->getInt('page', 1), // on démarre à la page 1
             3 // on ne veut afficher que 3 articles/page
         );

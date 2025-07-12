@@ -8,9 +8,24 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Nom</th>
-                <th>Prix</th>
-                <th>Catégorie</th>
+                <th>
+                    {{ knp_pagination_sortable(articles, 'Nom', 'Name') }}
+                    {% if articles.isSorted('Name') %}
+                        <i class="fa fa-sort-{{ articles.direction == 'asc' ? 'up' : 'down' }}"></i>
+                    {% endif %}
+                </th>
+                <th>
+                    {{ knp_pagination_sortable(articles, 'Prix', 'Price') }}
+                    {% if articles.isSorted('Price') %}
+                        <i class="fa fa-sort-{{ articles.direction == 'asc' ? 'up' : 'down' }}"></i>
+                    {% endif %}
+                </th>
+                <th>
+                    {{ knp_pagination_sortable(articles, 'Catégorie', 'Category') }}
+                    {% if articles.isSorted('Category') %}
+                        <i class="fa fa-sort-{{ articles.direction == 'asc' ? 'up' : 'down' }}"></i>
+                    {% endif %}
+                </th>
                 <th>Actions</th>
             </tr>
         </thead>
