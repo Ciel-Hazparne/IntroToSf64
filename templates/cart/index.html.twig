@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste achat{% endblock %}
+
+{% block body %}
+    <h1>Votre liste {{ app.user.firstname }} {{ app.user.lastname }}</h1>
+    {% if items | length > 0 %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Article</th>
+                <th>Quantité</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.article.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td><a href="{{ path('cart_remove', {'id': item.article.id}) }}"
+                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')"
+                           class="btn btn-danger btn-sm">supprimer</a>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Votre liste est vide !</p>
+    {% endif %}
+
+    <div class="d-flex justify-content-start mt-3">
+        <a href="{{ path('article_index') }}" class="btn btn-secondary me-md-2"><i class="fa fa-reply"></i> Retour</a>
+        <a href="{{ path('cart_pdf') }}" class="btn btn-danger me-md-2"><i class="fa fa-file-pdf-o"></i> Export au format PDF</a>
+        <a href="{{ path('cart_excel') }}" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Export au format Excel</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <style>
+        table{
+            border-collapse: collapse;
+            width: 450px;
+            margin-bottom: 20px;
+        }
+
+        .table{
+            table-layout: auto;
+        }
+
+        th, td{
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+{% block body %}
+    {% set now = "now"|date("U") %}
+    <h1>Votre liste d'articles </h1>
+    <h2>Le {{ "now"|date("d/m/Y") }}</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Article</th>
+            <th>Quantité</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.article.name }}</td>
+                <td>{{ item.quantity }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+</body>
+</html>
