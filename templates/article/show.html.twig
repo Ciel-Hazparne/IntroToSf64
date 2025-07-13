@@ -1,26 +1,24 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Article {{ article.name }}{% endblock %}
+{% block title %}{{ article.name }}{% endblock %}
 
 {% block body %}
-    <h3>Article {{ article.name }}</h3>
-
-    <table class="table mt-5">
-        <tbody>
-            <tr>
-                <th>Nom de l'article</th>
-                <td>{{ article.name }}</td>
-            </tr>
-            <tr>
-                <th>Prix de l'article</th>
-                <td>{{ article.price }}</td>
-            </tr>
-            <tr>
-                <th>Catégorie</th>
-                <td>{{ article.category.title }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <h4 class="card-header">{% if article.imagename %}
+                    <img src="{{ vich_uploader_asset(article, 'imageFile') | imagine_filter('thumb') }}" alt="Pas de photo">
+                {% else %}
+                    <img src="{{ '/images/articles/empty.jpg' | imagine_filter('thumb') }}" alt="Pas de photo">
+                {% endif %}</h4>
+        </div>
+        <div class="col-lg-9">
+            <h3>{{ article.name }}</h3>
+            <hr>
+            <h4>Prix TTC : {{ article.price }} €</h4>
+            <p>Catégorie : {{ article.category.title }}</p>
+            <p>Description : {{ article.category.description}}</p>
+        </div>
+    </div>
 
     <div class="d-flex justify-content-start mt-3">
         <a href="{{ path('article_index') }}"><button type="button" class="btn btn-secondary me-md-2"><i class="fa fa-reply"></i> Retour</button></a>
@@ -30,5 +28,6 @@
         {{ include('article/_delete_form.html.twig') }}
         {% endif %}
     </div>
+</div>
 
 {% endblock %}

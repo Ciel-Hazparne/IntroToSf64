@@ -21,3 +21,7 @@
 ###< symfony/asset-mapper ###
 
 /templates/partials/header-final.html.twig
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###
