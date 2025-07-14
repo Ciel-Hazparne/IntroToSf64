@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints\Expression;
 #[Route('/user')]
 final class UserController extends AbstractController
 {
+//    #[IsGranted('ROLE_ADMIN')]
     #[Route(name: 'user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -32,6 +33,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher,
                         PasswordValidator $passwordValidator): Response
@@ -73,6 +75,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
@@ -81,7 +84,7 @@ final class UserController extends AbstractController
             'user' => $user,
         ]);
     }
-
+    #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, UserRepository $userRepository, UserInterface $loggedInUser,
                          AuthorizationCheckerInterface $authChecker, UserPasswordHasherInterface $passwordHasher,
