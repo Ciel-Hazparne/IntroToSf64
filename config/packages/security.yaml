@@ -37,8 +37,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-#        - { path: ^/user/\d+/edit$, roles: ROLE_USER } # autorisé pour tous les connectés mais le contrôleur ne permet que la modifcation de son propre profil
-#        - { path: ^/user, roles: ROLE_ADMIN }          # sinon restreint aux admins
+        - { path: ^/user/\d+/edit$, roles: ROLE_USER } # autorisé pour tous les connectés mais le contrôleur ne permet que la modifcation de son propre profil
+        - { path: ^/user, roles: ROLE_ADMIN }          # sinon restreint aux admins
 
 when@test:
     security:
