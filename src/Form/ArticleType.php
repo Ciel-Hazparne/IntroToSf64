@@ -17,16 +17,16 @@ class ArticleType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'label' => 'Nom de l\'article',
                 'attr' => [
                 'required' => true,
-                'label' => 'Nom de l\'article',
                 'placeholder' => 'Entez le nom de l\'article : entre 5 et 50 caractères',
                 ],
             ])
             ->add('price', TextType::class, [
+                'label' => 'Prix de l\'article',
                 'attr' => [
                 'required' => true,
-                'label' => 'Prix de l\'article',
                 'placeholder' => 'Entrez le prix de l\'article : il doit être supérieur à 0€',
                 ],
             ])
